@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ஏஞ்சல் ஒன் - ஷேர் மார்கெட்</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0f172a;
+    --bg2:#1e293b;
+    --card:#ffffff;
+    --accent:#4f46e5;
+    --accent2:#7c3aed;
+    --accent-light:#eef2ff;
+    --text-dark:#1e293b;
+    --text-muted:#64748b;
+    --danger:#ef4444;
+    --success:#10b981;
+    --border:#e2e8f0;
+    --shadow:0 4px 14px rgba(0,0,0,0.08);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Noto Sans Tamil','Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);
+    min-height:100vh;
+    color:var(--text-dark);
+    padding-bottom:60px;
+  }
+  header{
+    background:linear-gradient(120deg,var(--accent),var(--accent2));
+    color:#fff;
+    padding:22px 20px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 4px 20px rgba(0,0,0,0.25);
+    position:sticky;
+    top:0;
+    z-index:50;
+  }
+  header h1{
+    font-size:22px;
+    font-weight:800;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  header h1 span.sub{
+    font-size:12px;
+    font-weight:400;
+    opacity:0.85;
+    display:block;
+  }
+  .header-actions{display:flex; gap:10px; flex-wrap:wrap;}
+  button{
+    font-family:inherit;
+    cursor:pointer;
+    border:none;
+    border-radius:10px;
+    font-weight:600;
+    transition:all .15s ease;
+  }
+  .btn-primary{
+    background:#fff;
+    color:var(--accent);
+    padding:10px 18px;
+    font-size:14px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.15);
+  }
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 6px 14px rgba(0,0,0,0.2);}
+  .btn-ghost{
+    background:rgba(255,255,255,0.15);
+    color:#fff;
+    padding:10px 16px;
+    font-size:13px;
+    border:1px solid rgba(255,255,255,0.35);
+  }
+  .btn-ghost:hover{background:rgba(255,255,255,0.28);}
+
+  .admin-link-wrap{
+    display:flex;
+    align-items:stretch;
+    gap:0;
+  }
+  .admin-link-btn{
+    border-top-right-radius:0;
+    border-bottom-right-radius:0;
+  }
+  .admin-link-edit{
+    background:rgba(255,255,255,0.9);
+    color:var(--accent);
+    padding:0 10px;
+    font-size:12px;
+    border-top-right-radius:10px;
+    border-bottom-right-radius:10px;
+    border-left:1px solid var(--border);
+  }
+  .admin-link-edit:hover{background:#fff;}
+
+  .container{max-width:1500px; margin:0 auto; padding:24px 20px;}
+
+  .tabs-outer{
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    margin-bottom:20px;
+  }
+  .tabs-wrap{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    background:var(--bg2);
+    padding:10px;
+    border-radius:14px;
+    flex:1;
+    overflow:hidden;
+    max-height:48px;
+    transition:max-height .25s ease;
+  }
+  .tabs-wrap.expanded{
+    max-height:400px;
+  }
+  .tabs-toggle{
+    flex-shrink:0;
+    width:44px;
+    height:44px;
+    background:var(--bg2);
+    color:#cbd5e1;
+    border-radius:12px;
+    font-size:15px;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    transition:transform .25s ease, background .15s ease;
+  }
+  .tabs-toggle:hover{background:#2c3e57; color:#fff;}
+  .tabs-toggle.expanded{transform:rotate(180deg);}
+
+  .search-wrap{
+    position:relative;
+    margin-bottom:20px;
+  }
+  .search-wrap input{
+    width:100%;
+    padding:13px 16px 13px 42px;
+    border-radius:12px;
+    border:none;
+    font-size:14px;
+    font-family:inherit;
+    background:var(--bg2);
+    color:#fff;
+    outline:none;
+  }
+  .search-wrap input::placeholder{color:#94a3b8;}
+  .search-wrap input:focus{box-shadow:0 0 0 2px var(--accent);}
+  .search-wrap .search-icon{
+    position:absolute;
+    left:14px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:16px;
+    pointer-events:none;
+  }
+  .search-wrap .clear-search{
+    position:absolute;
+    right:12px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:13px;
+    color:#94a3b8;
+    background:transparent;
+    padding:4px 8px;
+    display:none;
+  }
+  .search-wrap .clear-search:hover{color:#fff;}
+  .tab-btn{
+    background:transparent;
+    color:#cbd5e1;
+    padding:10px 18px;
+    font-size:14px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .tab-btn:hover{background:rgba(255,255,255,0.08); color:#fff;}
+  .tab-btn.active{
+    background:linear-gradient(120deg,var(--accent),var(--accent2));
+    color:#fff;
+    box-shadow:0 3px 10px rgba(79,70,229,0.4);
+  }
+  .tab-btn .count{
+    background:rgba(255,255,255,0.2);
+    padding:2px 8px;
+    border-radius:20px;
+    font-size:11px;
+  }
+  .tab-btn.active .count{background:rgba(255,255,255,0.3);}
+
+  .empty-state{
+    text-align:center;
+    color:#94a3b8;
+    padding:60px 20px;
+    background:var(--bg2);
+    border-radius:16px;
+  }
+  .empty-state .icon{font-size:48px; margin-bottom:14px;}
+  .empty-state p{font-size:16px; margin-bottom:16px;}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(230px, 1fr));
+    gap:16px;
+  }
+
+  .card{
+    background:var(--card);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+    position:relative;
+    cursor:pointer;
+    border:2px solid transparent;
+    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    gap:14px;
+    padding:12px 44px 12px 14px;
+    height:78px;
+  }
+  .card:hover{transform:translateY(-3px); box-shadow:0 10px 24px rgba(0,0,0,0.18); border-color:var(--accent);}
+  .card.dragging{opacity:0.4;}
+  .card.drag-over{border-color:var(--accent2); border-style:dashed;}
+
+  .card .img-wrap{
+    flex-shrink:0;
+    width:52px;
+    height:52px;
+    border-radius:11px;
+    background:var(--accent-light);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    position:relative;
+  }
+  .card .img-wrap img{width:100%; height:100%; object-fit:contain; padding:3px;}
+  .card .img-wrap .placeholder-icon{font-size:24px; color:var(--accent);}
+
+  .card .name-bar{
+    flex:1;
+    padding:0;
+    text-align:left;
+    font-size:15px;
+    font-weight:700;
+    color:var(--text-dark);
+    background:transparent;
+    border-top:none;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    line-height:1.3;
+  }
+
+  .card-controls{
+    position:absolute;
+    top:5px;
+    right:5px;
+    display:flex;
+    gap:3px;
+    opacity:0;
+    transition:opacity .15s ease;
+    z-index:5;
+  }
+  .card:hover .card-controls{opacity:1;}
+  .ctrl-btn{
+    width:24px; height:24px;
+    border-radius:6px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px;
+    background:rgba(255,255,255,0.95);
+    box-shadow:0 2px 6px rgba(0,0,0,0.25);
+    color:var(--text-dark);
+  }
+  .ctrl-btn.edit:hover{background:var(--accent); color:#fff;}
+  .ctrl-btn.del:hover{background:var(--danger); color:#fff;}
+
+  .drag-handle{
+    position:absolute;
+    bottom:5px;
+    right:5px;
+    width:24px; height:24px;
+    border-radius:6px;
+    background:rgba(255,255,255,0.95);
+    display:flex; align-items:center; justify-content:center;
+    font-size:13px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.25);
+    opacity:0;
+    transition:opacity .15s ease;
+    cursor:grab;
+    z-index:5;
+  }
+  .card:hover .drag-handle{opacity:1;}
+  .card.no-drag .drag-handle{display:none;}
+
+  /* Modal */
+  .modal-overlay{
+    position:fixed; inset:0;
+    background:rgba(15,23,42,0.65);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:200;
+    padding:20px;
+  }
+  .modal-overlay.show{display:flex;}
+  .modal{
+    background:#fff;
+    border-radius:18px;
+    width:100%;
+    max-width:440px;
+    max-height:90vh;
+    overflow-y:auto;
+    padding:26px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.35);
+  }
+  .modal h2{font-size:19px; margin-bottom:18px; color:var(--text-dark); display:flex; align-items:center; gap:8px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block; font-size:13px; font-weight:700; margin-bottom:6px; color:var(--text-muted);}
+  .field input[type=text], .field input[type=url], .field select{
+    width:100%;
+    padding:11px 12px;
+    border:2px solid var(--border);
+    border-radius:10px;
+    font-size:14px;
+    font-family:inherit;
+    outline:none;
+    transition:border-color .15s ease;
+  }
+  .field input:focus, .field select:focus{border-color:var(--accent);}
+  .field .hint{font-size:11px; color:var(--text-muted); margin-top:5px;}
+
+  .cat-toggle{
+    display:flex;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  .cat-toggle button{
+    flex:1;
+    padding:8px;
+    font-size:12px;
+    border:2px solid var(--border);
+    background:#fff;
+    color:var(--text-muted);
+    border-radius:8px;
+  }
+  .cat-toggle button.active{
+    border-color:var(--accent);
+    background:var(--accent-light);
+    color:var(--accent);
+  }
+
+  .img-upload-area{
+    border:2px dashed var(--border);
+    border-radius:12px;
+    padding:16px;
+    text-align:center;
+    cursor:pointer;
+    position:relative;
+  }
+  .img-upload-area:hover{border-color:var(--accent); background:var(--accent-light);}
+  .img-upload-area img{max-width:100%; max-height:110px; border-radius:8px; margin-top:8px;}
+  .img-upload-area input[type=file]{display:none;}
+  .img-upload-area .up-text{font-size:12px; color:var(--text-muted);}
+  .remove-img{
+    display:inline-block;
+    margin-top:8px;
+    font-size:12px;
+    color:var(--danger);
+    font-weight:700;
+  }
+
+  .modal-actions{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+  }
+  .modal-actions button{flex:1; padding:12px; font-size:14px;}
+  .btn-save{background:var(--accent); color:#fff;}
+  .btn-save:hover{background:var(--accent2);}
+  .btn-cancel{background:#f1f5f9; color:var(--text-muted);}
+  .btn-cancel:hover{background:#e2e8f0;}
+
+  .toast{
+    position:fixed;
+    bottom:24px;
+    left:50%;
+    transform:translateX(-50%) translateY(100px);
+    background:var(--text-dark);
+    color:#fff;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:14px;
+    z-index:300;
+    box-shadow:0 8px 24px rgba(0,0,0,0.3);
+    transition:transform .25s ease;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0);}
+
+  .confirm-box p{font-size:14px; color:var(--text-muted); margin-bottom:16px; line-height:1.5;}
+
+  @media(max-width:480px){
+    header{padding:16px;}
+    header h1{font-size:18px;}
+    .container{padding:16px 12px;}
+    .grid{grid-template-columns:repeat(auto-fill, minmax(130px,1fr));}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🗂️ பங்குச் சந்தை <span class="sub">உதவி பக்கம் - Thoothukudi</span></h1>
+  <div class="header-actions">
+    <div class="admin-link-wrap">
+      <button class="btn-primary admin-link-btn" id="adminLinkBtn" onclick="openAdminLink()" title="அட்மின் பேனலுக்கு செல்ல">🛡️ அட்மின்</button>
+      <button class="admin-link-edit" onclick="openAdminLinkModal()" title="அட்மின் லிங்க் திருத்த">✏️</button>
+    </div>
+    <button class="btn-primary" onclick="openAddModal()">+ புதிய சேவை சேர்க்க</button>
+    <button class="btn-ghost" onclick="exportData()">📥 பேக்அப் Export</button>
+    <button class="btn-ghost" onclick="document.getElementById('importFile').click()">📤 Import</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+  </div>
+</header>
+
+<div class="container">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="சேவை பெயரால் தேடவும்..." oninput="onSearchInput()">
+    <button class="clear-search" id="clearSearchBtn" onclick="clearSearch()">✕ அழி</button>
+  </div>
+  <div class="tabs-outer">
+    <div id="tabsWrap" class="tabs-wrap"></div>
+    <button class="tabs-toggle" id="tabsToggleBtn" onclick="toggleTabs()" title="மேலும் வகைகளை காட்டு">▼</button>
+  </div>
+  <div id="gridWrap"></div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" id="serviceModal">
+  <div class="modal">
+    <h2 id="modalTitle">🆕 புதிய சேவை சேர்க்க</h2>
+
+    <div class="field">
+      <label>சேவை வகை (Tab பெயர்)</label>
+      <div class="cat-toggle">
+        <button type="button" id="catExistingBtn" class="active" onclick="setCatMode('existing')">உள்ள வகை</button>
+        <button type="button" id="catNewBtn" onclick="setCatMode('new')">புதிய வகை</button>
+      </div>
+      <select id="catSelect"></select>
+      <input type="text" id="catNew" placeholder="புதிய வகை பெயரை உள்ளிடவும்" style="display:none">
+    </div>
+
+    <div class="field">
+      <label>சேவை பெயர்</label>
+      <input type="text" id="svcName" placeholder="எ.கா: ஆதார் பதிவு">
+    </div>
+
+    <div class="field">
+      <label>சேவை படம்</label>
+      <div class="img-upload-area" onclick="document.getElementById('imgFile').click()">
+        <div class="up-text" id="imgUploadText">📷 படம் தேர்ந்தெடுக்க கிளிக் செய்யவும்</div>
+        <img id="imgPreview" style="display:none">
+        <input type="file" id="imgFile" accept="image/*" onchange="handleImgUpload(event)">
+      </div>
+      <div id="removeImgBtn" class="remove-img" style="display:none" onclick="removeImg(event)">✕ படத்தை நீக்கு</div>
+      <div class="field" style="margin-top:10px;">
+        <label>அல்லது படத்தின் இணைய முகவரி (URL)</label>
+        <input type="text" id="imgUrl" placeholder="https://example.com/image.png" oninput="handleImgUrlInput()">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>இணைய முகவரி (Link URL)</label>
+      <input type="url" id="svcUrl" placeholder="https://example.com">
+      <div class="hint">இந்த பாக்ஸை கிளிக் செய்தால் இந்த முகவரிக்கு செல்லும்</div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">ரத்து செய்</button>
+      <button class="btn-save" onclick="saveService()">💾 சேமி</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal confirm-box" style="max-width:340px;">
+    <h2>🗑️ நீக்க வேண்டுமா?</h2>
+    <p>இந்த சேவையை நிரந்தரமாக நீக்க விரும்புகிறீர்களா? இதை மீட்க முடியாது.</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeConfirm()">ரத்து செய்</button>
+      <button class="btn-save" style="background:var(--danger)" onclick="confirmDelete()">நீக்கு</button>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Link Setup Modal -->
+<div class="modal-overlay" id="adminLinkModal">
+  <div class="modal" style="max-width:380px;">
+    <h2>🛡️ அட்மின் லிங்க் அமைக்க</h2>
+    <div class="field">
+      <label>உங்கள் அட்மின் பேனல் இணைய முகவரி</label>
+      <input type="url" id="adminLinkInput" placeholder="https://creatorapp.zoho.in/...">
+      <div class="hint">"🛡️ அட்மின்" பொத்தானை அழுத்தும்போது இந்த முகவரிக்கு நேரடியாக செல்லும்</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeAdminLinkModal()">ரத்து செய்</button>
+      <button class="btn-save" onclick="saveAdminLink()">💾 சேமி</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const STORAGE_KEY = 'dhass_stockmarket_links_v1';
+  const HOME_TAB = '__home__';
+  let services = [];       // {id, category, name, image, url, order}
+  let activeTab = HOME_TAB;
+  let editingId = null;
+  let deleteTargetId = null;
+  let dragSrcId = null;
+  let catMode = 'existing';
+  let searchQuery = '';
+  let tabsExpanded = false;
+
+  function loadData(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      services = raw ? JSON.parse(raw) : [];
+    }catch(e){ services = []; }
+    ensureHomeOrder();
+  }
+  function saveData(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(services));
+  }
+
+  // Backfill homeOrder for older saved data so Home tab can be freely reordered,
+  // keeping the same visual order it already had (grouped by category).
+  function ensureHomeOrder(){
+    const missing = services.some(s => typeof s.homeOrder !== 'number');
+    if(!missing) return;
+    const cats = getCategories();
+    let idx = 0;
+    cats.forEach(c=>{
+      services.filter(s=>s.category===c).sort((a,b)=>a.order-b.order).forEach(s=>{ s.homeOrder = idx++; });
+    });
+    saveData();
+  }
+
+  function getCategories(){
+    const cats = [];
+    services.forEach(s=>{ if(!cats.includes(s.category)) cats.push(s.category); });
+    return cats;
+  }
+
+  function renderTabs(){
+    const cats = getCategories();
+    const wrap = document.getElementById('tabsWrap');
+    const toggleBtn = document.getElementById('tabsToggleBtn');
+    if(services.length === 0){
+      wrap.innerHTML = '';
+      toggleBtn.style.display = 'none';
+      return;
+    }
+    if(!activeTab || (activeTab !== HOME_TAB && !cats.includes(activeTab))) activeTab = HOME_TAB;
+    const homeActive = activeTab === HOME_TAB ? 'active' : '';
+    let html = `<button class="tab-btn ${homeActive}" onclick="switchTab('${HOME_TAB}')">🏠 ஹோம் <span class="count">${services.length}</span></button>`;
+    html += cats.map(c=>{
+      const count = services.filter(s=>s.category===c).length;
+      const active = c===activeTab ? 'active' : '';
+      return `<button class="tab-btn ${active}" onclick="switchTab('${escapeAttr(c)}')">${escapeHtml(c)} <span class="count">${count}</span></button>`;
+    }).join('');
+    wrap.innerHTML = html;
+
+    // Show the expand arrow only if the tabs actually overflow one row
+    requestAnimationFrame(()=>{
+      const overflowing = wrap.scrollHeight > wrap.clientHeight + 4;
+      toggleBtn.style.display = overflowing || tabsExpanded ? 'flex' : 'none';
+    });
+  }
+
+  function toggleTabs(){
+    tabsExpanded = !tabsExpanded;
+    const wrap = document.getElementById('tabsWrap');
+    const toggleBtn = document.getElementById('tabsToggleBtn');
+    wrap.classList.toggle('expanded', tabsExpanded);
+    toggleBtn.classList.toggle('expanded', tabsExpanded);
+  }
+
+  function onSearchInput(){
+    searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
+    document.getElementById('clearSearchBtn').style.display = searchQuery ? 'block' : 'none';
+    renderGrid();
+  }
+  function clearSearch(){
+    document.getElementById('searchInput').value = '';
+    searchQuery = '';
+    document.getElementById('clearSearchBtn').style.display = 'none';
+    renderGrid();
+  }
+
+  function switchTab(cat){
+    activeTab = cat;
+    renderTabs();
+    renderGrid();
+  }
+
+  function renderGrid(){
+    const gridWrap = document.getElementById('gridWrap');
+    if(services.length === 0){
+      gridWrap.innerHTML = `
+        <div class="empty-state">
+          <div class="icon">📭</div>
+          <p>இன்னும் எந்த சேவையும் சேர்க்கப்படவில்லை</p>
+          <button class="btn-primary" style="background:var(--accent); color:#fff;" onclick="openAddModal()">+ முதல் சேவையை சேர்க்க</button>
+        </div>`;
+      return;
+    }
+
+    const isSearching = !!searchQuery;
+    const isHome = activeTab === HOME_TAB;
+    let items;
+
+    if(isSearching){
+      // Global search across every category, regardless of active tab
+      items = services.filter(s=>s.name.toLowerCase().includes(searchQuery));
+    } else if(isHome){
+      // Show everything in a free, independently-reorderable flat order
+      items = services.slice().sort((a,b)=>(a.homeOrder??0)-(b.homeOrder??0));
+    } else {
+      items = services.filter(s=>s.category===activeTab).sort((a,b)=>a.order-b.order);
+    }
+
+    if(items.length === 0){
+      const msg = isSearching ? `"${escapeHtml(searchQuery)}" எனத் தேடியதற்கு எதுவும் கிடைக்கவில்லை` : 'இந்த வகையில் சேவைகள் இல்லை';
+      gridWrap.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>${msg}</p></div>`;
+      return;
+    }
+
+    const noDrag = isSearching || isHome;
+    gridWrap.innerHTML = `<div class="grid" id="cardsGrid">` + items.map(s=>{
+      const imgHtml = s.image
+        ? `<img src="${escapeAttr(s.image)}" alt="${escapeAttr(s.name)}">`
+        : `<div class="placeholder-icon">🔗</div>`;
+      const dragAttrs = noDrag ? '' : `
+           ondragstart="onDragStart(event,'${s.id}')"
+           ondragover="onDragOver(event,'${s.id}')"
+           ondragleave="onDragLeave(event)"
+           ondrop="onDrop(event,'${s.id}')"
+           ondragend="onDragEnd(event)"`;
+      const dragHandle = noDrag ? '' : `<div class="drag-handle" title="இடம் மாற்ற இழுக்கவும்">⠿</div>`;
+      const noDragCls = noDrag ? 'no-drag' : '';
+      const tooltip = isSearching ? `${s.name} · ${s.category}` : s.name;
+      return `
+      <div class="card ${noDragCls}" draggable="${!noDrag}" data-id="${s.id}"
+           ${dragAttrs}
+           onclick="onCardClick(event,'${s.id}')" title="${escapeAttr(tooltip)}">
+        ${dragHandle}
+        <div class="card-controls">
+          <div class="ctrl-btn edit" title="திருத்து" onclick="event.stopPropagation(); openEditModal('${s.id}')">✏️</div>
+          <div class="ctrl-btn del" title="நீக்கு" onclick="event.stopPropagation(); openConfirm('${s.id}')">🗑️</div>
+        </div>
+        <div class="img-wrap">${imgHtml}</div>
+        <div class="name-bar">${escapeHtml(s.name)}</div>
+      </div>`;
+    }).join('') + `</div>`;
+  }
+
+  function onCardClick(e, id){
+    const svc = services.find(s=>s.id===id);
+    if(svc && svc.url){
+      window.open(svc.url, '_blank');
+    }
+  }
+
+  // ---------- Drag & drop reorder ----------
+  function onDragStart(e, id){
+    dragSrcId = id;
+    e.target.closest('.card').classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  }
+  function onDragOver(e, id){
+    e.preventDefault();
+    if(id !== dragSrcId){
+      e.target.closest('.card').classList.add('drag-over');
+    }
+  }
+  function onDragLeave(e){
+    e.target.closest('.card')?.classList.remove('drag-over');
+  }
+  function onDragEnd(e){
+    document.querySelectorAll('.card').forEach(c=>{c.classList.remove('dragging'); c.classList.remove('drag-over');});
+  }
+  function onDrop(e, targetId){
+    e.preventDefault();
+    e.target.closest('.card')?.classList.remove('drag-over');
+    if(!dragSrcId || dragSrcId === targetId) return;
+
+    if(activeTab === HOME_TAB){
+      const items = services.slice().sort((a,b)=>(a.homeOrder??0)-(b.homeOrder??0));
+      const srcIdx = items.findIndex(s=>s.id===dragSrcId);
+      const tgtIdx = items.findIndex(s=>s.id===targetId);
+      if(srcIdx === -1 || tgtIdx === -1) return;
+
+      const [moved] = items.splice(srcIdx,1);
+      items.splice(tgtIdx,0,moved);
+      items.forEach((s,i)=>{ s.homeOrder = i; });
+
+      saveData();
+      renderGrid();
+      showToast('இடம் மாற்றப்பட்டது ✓');
+      return;
+    }
+
+    const items = services.filter(s=>s.category===activeTab).sort((a,b)=>a.order-b.order);
+    const srcIdx = items.findIndex(s=>s.id===dragSrcId);
+    const tgtIdx = items.findIndex(s=>s.id===targetId);
+    if(srcIdx === -1 || tgtIdx === -1) return;
+
+    const [moved] = items.splice(srcIdx,1);
+    items.splice(tgtIdx,0,moved);
+    items.forEach((s,i)=>{ s.order = i; });
+
+    // merge back
+    services = services.filter(s=>s.category!==activeTab).concat(items);
+    saveData();
+    renderGrid();
+    showToast('இடம் மாற்றப்பட்டது ✓');
+  }
+
+  // ---------- Modal: add/edit ----------
+  function setCatMode(mode){
+    catMode = mode;
+    document.getElementById('catExistingBtn').classList.toggle('active', mode==='existing');
+    document.getElementById('catNewBtn').classList.toggle('active', mode==='new');
+    document.getElementById('catSelect').style.display = mode==='existing' ? 'block' : 'none';
+    document.getElementById('catNew').style.display = mode==='new' ? 'block' : 'none';
+  }
+
+  function populateCatSelect(selectedCat){
+    const sel = document.getElementById('catSelect');
+    const cats = getCategories();
+    sel.innerHTML = cats.map(c=>`<option value="${escapeAttr(c)}">${escapeHtml(c)}</option>`).join('');
+    if(cats.length===0){
+      setCatMode('new');
+      document.getElementById('catExistingBtn').style.display='none';
+    } else {
+      document.getElementById('catExistingBtn').style.display='block';
+      if(selectedCat && cats.includes(selectedCat)) sel.value = selectedCat;
+    }
+  }
+
+  function openAddModal(){
+    editingId = null;
+    document.getElementById('modalTitle').textContent = '🆕 புதிய சேவை சேர்க்க';
+    document.getElementById('svcName').value = '';
+    document.getElementById('svcUrl').value = '';
+    document.getElementById('imgUrl').value = '';
+    resetImgPreview();
+    populateCatSelect(activeTab);
+    setCatMode(getCategories().length ? 'existing' : 'new');
+    document.getElementById('catNew').value = '';
+    document.getElementById('serviceModal').classList.add('show');
+  }
+
+  function openEditModal(id){
+    const svc = services.find(s=>s.id===id);
+    if(!svc) return;
+    editingId = id;
+    document.getElementById('modalTitle').textContent = '✏️ சேவையை திருத்து';
+    document.getElementById('svcName').value = svc.name;
+    document.getElementById('svcUrl').value = svc.url;
+    populateCatSelect(svc.category);
+    setCatMode('existing');
+    document.getElementById('catNew').value = '';
+
+    resetImgPreview();
+    if(svc.image){
+      showImgPreview(svc.image);
+      document.getElementById('imgUrl').value = svc.image.startsWith('http') ? svc.image : '';
+    }
+    document.getElementById('serviceModal').classList.add('show');
+  }
+
+  function closeModal(){
+    document.getElementById('serviceModal').classList.remove('show');
+    editingId = null;
+  }
+
+  function handleImgUpload(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      showImgPreview(ev.target.result);
+      document.getElementById('imgUrl').value = '';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function handleImgUrlInput(){
+    const url = document.getElementById('imgUrl').value.trim();
+    if(url){
+      showImgPreview(url);
+    }
+  }
+
+  function showImgPreview(src){
+    const preview = document.getElementById('imgPreview');
+    preview.src = src;
+    preview.style.display = 'block';
+    document.getElementById('imgUploadText').style.display = 'none';
+    document.getElementById('removeImgBtn').style.display = 'inline-block';
+  }
+  function resetImgPreview(){
+    const preview = document.getElementById('imgPreview');
+    preview.src = '';
+    preview.style.display = 'none';
+    document.getElementById('imgUploadText').style.display = 'block';
+    document.getElementById('removeImgBtn').style.display = 'none';
+    document.getElementById('imgFile').value = '';
+  }
+  function removeImg(e){
+    e.stopPropagation();
+    resetImgPreview();
+    document.getElementById('imgUrl').value = '';
+  }
+
+  function saveService(){
+    const name = document.getElementById('svcName').value.trim();
+    const url = document.getElementById('svcUrl').value.trim();
+    const imgUrlVal = document.getElementById('imgUrl').value.trim();
+    const previewSrc = document.getElementById('imgPreview').src;
+    const image = imgUrlVal || (document.getElementById('imgPreview').style.display==='block' ? previewSrc : '');
+
+    let category;
+    if(catMode === 'new'){
+      category = document.getElementById('catNew').value.trim();
+    } else {
+      category = document.getElementById('catSelect').value;
+    }
+
+    if(!name){ showToast('சேவை பெயரை உள்ளிடவும் ⚠️'); return; }
+    if(!category){ showToast('சேவை வகையை உள்ளிடவும் ⚠️'); return; }
+    if(!url){ showToast('இணைய முகவரியை உள்ளிடவும் ⚠️'); return; }
+
+    if(editingId){
+      const svc = services.find(s=>s.id===editingId);
+      svc.category = category;
+      svc.name = name;
+      svc.url = url;
+      svc.image = image;
+    } else {
+      const maxOrder = services.filter(s=>s.category===category).reduce((m,s)=>Math.max(m,s.order),-1);
+      const maxHomeOrder = services.reduce((m,s)=>Math.max(m, typeof s.homeOrder==='number' ? s.homeOrder : -1), -1);
+      services.push({
+        id: 'svc_' + Date.now() + '_' + Math.floor(Math.random()*100000),
+        category, name, image, url,
+        order: maxOrder + 1,
+        homeOrder: maxHomeOrder + 1
+      });
+    }
+    saveData();
+    activeTab = category;
+    closeModal();
+    renderTabs();
+    renderGrid();
+    showToast('சேமிக்கப்பட்டது ✓');
+  }
+
+  // ---------- Delete ----------
+  function openConfirm(id){
+    deleteTargetId = id;
+    document.getElementById('confirmModal').classList.add('show');
+  }
+  function closeConfirm(){
+    document.getElementById('confirmModal').classList.remove('show');
+    deleteTargetId = null;
+  }
+  function confirmDelete(){
+    services = services.filter(s=>s.id!==deleteTargetId);
+    saveData();
+    closeConfirm();
+    renderTabs();
+    renderGrid();
+    showToast('நீக்கப்பட்டது 🗑️');
+  }
+
+  // ---------- Admin link button ----------
+  const ADMIN_LINK_KEY = 'dhass_stockmarket_admin_link_url';
+  function getAdminLink(){
+    return localStorage.getItem(ADMIN_LINK_KEY) || '';
+  }
+  function openAdminLink(){
+    const link = getAdminLink();
+    if(link){
+      window.open(link, '_blank');
+    } else {
+      showToast('முதலில் லிங்கை அமைக்கவும் ✏️');
+      openAdminLinkModal();
+    }
+  }
+  function openAdminLinkModal(){
+    document.getElementById('adminLinkInput').value = getAdminLink();
+    document.getElementById('adminLinkModal').classList.add('show');
+  }
+  function closeAdminLinkModal(){
+    document.getElementById('adminLinkModal').classList.remove('show');
+  }
+  function saveAdminLink(){
+    const url = document.getElementById('adminLinkInput').value.trim();
+    if(!url){ showToast('இணைய முகவரியை உள்ளிடவும் ⚠️'); return; }
+    localStorage.setItem(ADMIN_LINK_KEY, url);
+    closeAdminLinkModal();
+    showToast('அட்மின் லிங்க் சேமிக்கப்பட்டது ✓');
+  }
+
+  // ---------- Import / Export ----------
+  function exportData(){
+    const blob = new Blob([JSON.stringify(services, null, 2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    const d = new Date();
+    const ts = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    a.download = `dhass_services_backup_${ts}.json`;
+    a.click();
+    showToast('பேக்அப் Export ஆனது ✓');
+  }
+  function importData(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      try{
+        const data = JSON.parse(ev.target.result);
+        if(Array.isArray(data)){
+          services = data;
+          ensureHomeOrder();
+          saveData();
+          activeTab = null;
+          renderTabs();
+          renderGrid();
+          showToast('Import வெற்றி ✓');
+        } else {
+          showToast('தவறான Format ⚠️');
+        }
+      }catch(err){
+        showToast('கோப்பை படிக்க முடியவில்லை ⚠️');
+      }
+      e.target.value = '';
+    };
+    reader.readAsText(file);
+  }
+
+  // ---------- Utils ----------
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), 2200);
+  }
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function escapeAttr(str){ return escapeHtml(str); }
+
+  // close modal on overlay click
+  document.getElementById('serviceModal').addEventListener('click', function(e){
+    if(e.target === this) closeModal();
+  });
+  document.getElementById('confirmModal').addEventListener('click', function(e){
+    if(e.target === this) closeConfirm();
+  });
+  document.getElementById('adminLinkModal').addEventListener('click', function(e){
+    if(e.target === this) closeAdminLinkModal();
+  });
+
+  // init
+  loadData();
+  renderTabs();
+  renderGrid();
+</script>
+</body>
+</html>
